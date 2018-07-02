@@ -11,7 +11,7 @@ import java.util.*
 object KeyHelper
 {
     private val keyFactory = KeyFactory.getInstance("RSA")
-    private val keyPath = "/etc/montagu/api/token_key"
+    private val keyPath = "/etc/mrc/api/token_key"
     private val logger: Logger = LoggerFactory.getLogger(KeyHelper::class.java)
 
     val keyPair by lazy {

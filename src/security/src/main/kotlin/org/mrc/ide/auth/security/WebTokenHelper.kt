@@ -4,6 +4,7 @@ import org.pac4j.core.profile.CommonProfile
 import org.pac4j.jwt.config.signature.RSASignatureConfiguration
 import org.pac4j.jwt.profile.JwtGenerator
 import org.mrc.ide.auth.db.Config
+import org.mrc.ide.auth.models.User
 import org.mrc.ide.auth.models.Scope
 import org.mrc.ide.auth.models.permissions.ReifiedPermission
 import java.security.KeyPair
@@ -21,12 +22,12 @@ open class WebTokenHelper(
     val issuer = Config["token.issuer"]
     private val random = SecureRandom()
 
-    open fun generateToken(user: InternalUser, lifeSpan: Duration = defaultLifespan): String
+    open fun generateToken(user: User, lifeSpan: Duration = defaultLifespan): String
     {
         return generator.generate(claims(user, lifeSpan))
     }
 
-    fun claims(user: InternalUser, lifeSpan: Duration = defaultLifespan): Map<String, Any>
+    fun claims(user: User, lifeSpan: Duration = defaultLifespan): Map<String, Any>
     {
         return mapOf(
                 "iss" to issuer,
@@ -38,7 +39,7 @@ open class WebTokenHelper(
         )
     }
 
-    private fun shinyClaims(user: InternalUser): Map<String, Any>
+    private fun shinyClaims(user: User): Map<String, Any>
     {
         val allowedShiny = user.permissions.contains(ReifiedPermission("reports.review", Scope.Global()))
         return mapOf(
