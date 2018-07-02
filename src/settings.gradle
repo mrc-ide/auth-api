@@ -1,0 +1,5 @@
+rootProject.name = 'auth'
+include 'models',
+        'generateDatabaseInterface',
+        'databaseInterface',
+        'security'
