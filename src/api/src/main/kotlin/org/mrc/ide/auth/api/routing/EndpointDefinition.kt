@@ -1,7 +1,7 @@
-package org.mrc.ide.auth.api
+package org.mrc.ide.auth.api.routing
 
+import org.mrc.ide.auth.api.ActionContext
 import spark.route.HttpMethod
-import kotlin.reflect.KClass
 
 typealias ResultProcessor = (Any?, ActionContext) -> Any?
 

@@ -1,5 +1,6 @@
 package org.mrc.ide.auth.api
 
+import org.mrc.ide.auth.api.routing.Router
 import org.mrc.ide.auth.models.Config
 import org.mrc.ide.auth.security.KeyHelper
 import org.mrc.ide.auth.security.WebTokenHelper

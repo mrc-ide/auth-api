@@ -1,5 +1,13 @@
-package org.mrc.ide.auth.api
+package org.mrc.ide.auth.api.routing
 
+import org.mrc.ide.auth.api.ActionContext
+import org.mrc.ide.auth.api.DirectActionContext
+import org.mrc.ide.auth.api.Serializer
+import org.mrc.ide.auth.api.controllers.AuthenticationController
+import org.mrc.ide.auth.api.routing.Endpoint
+import org.mrc.ide.auth.api.routing.EndpointDefinition
+import org.mrc.ide.auth.api.routing.basicAuth
+import org.mrc.ide.auth.api.routing.json
 import org.mrc.ide.auth.db.JooqContext
 import org.mrc.ide.auth.db.UserRepository
 import org.mrc.ide.auth.security.WebTokenHelper
@@ -42,7 +50,7 @@ class Router(private val serializer: Serializer,
         val route = getWrappedRoute(endpoint)::handle
         val contentType = endpoint.contentType
 
-        logger.info("Mapping $fullUrl to ${endpoint.actionName} on AuthController")
+        logger.info("Mapping $fullUrl to ${endpoint.actionName} on AuthenticationController")
         when (endpoint.method) {
             HttpMethod.get -> Spark.get(fullUrl, contentType, route, this::transform)
             HttpMethod.post -> Spark.post(fullUrl, contentType, route, this::transform)
@@ -63,14 +71,14 @@ class Router(private val serializer: Serializer,
 
     private fun invokeControllerAction(endpoint: EndpointDefinition, context: ActionContext): Any? {
         val actionName = endpoint.actionName
-        val controller = AuthController(context, UserRepository(JooqContext().dsl), webTokenHelper)
-        val action = AuthController::class.java.getMethod(actionName)
+        val controller = AuthenticationController(context, UserRepository(JooqContext().dsl), webTokenHelper)
+        val action = AuthenticationController::class.java.getMethod(actionName)
 
         val result = try {
             action.invoke(controller)
         } catch (e: InvocationTargetException) {
             logger.warn("Exception was thrown whilst using reflection to invoke " +
-                    "AuthController.$actionName, see below for details")
+                    "AuthenticationController.$actionName, see below for details")
             throw e.targetException
         }
         return endpoint.postProcess(result, context)

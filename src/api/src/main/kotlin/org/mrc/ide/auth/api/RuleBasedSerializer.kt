@@ -32,7 +32,7 @@ inline fun <reified T : Any> applyRules(it: SerializerArg<T>, json: JsonObject)
 
 fun <T> removeFieldIfNull(original: T, json: JsonObject,
                           property: KProperty1<T, Any?>,
-                          serializer: Serializer = MontaguSerializer.instance)
+                          serializer: Serializer = ApiSerializer.instance)
 {
     if (property.get(original) == null)
     {
