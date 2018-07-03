@@ -8,10 +8,9 @@ import java.security.spec.PKCS8EncodedKeySpec
 import java.security.spec.X509EncodedKeySpec
 import java.util.*
 
-object KeyHelper
+class KeyHelper(private val keyPath: String)
 {
     private val keyFactory = KeyFactory.getInstance("RSA")
-    private val keyPath = "/etc/mrc/api/token_key"
     private val logger: Logger = LoggerFactory.getLogger(KeyHelper::class.java)
 
     val keyPair by lazy {

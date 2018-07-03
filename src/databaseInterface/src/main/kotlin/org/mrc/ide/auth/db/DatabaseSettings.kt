@@ -1,5 +1,11 @@
 package org.mrc.ide.auth.db
 
+import org.mrc.ide.auth.models.Config
+
+object DatabaseConfig : Config(DatabaseConfig::class.java.classLoader
+        .getResource("config.properties")
+        .path)
+
 data class DatabaseSettings(
         val host: String,
         val port: String,
@@ -16,12 +22,12 @@ data class DatabaseSettings(
 
     companion object
     {
-        fun fromConfig(prefix: String) = DatabaseSettings(
-                Config["$prefix.host"],
-                Config["$prefix.port"],
-                Config["$prefix.name"],
-                Config["$prefix.username"],
-                Config["$prefix.password"]
+        fun fromConfig() = DatabaseSettings(
+                DatabaseConfig["db.host"],
+                DatabaseConfig["db.port"],
+                DatabaseConfig["db.name"],
+                DatabaseConfig["db.username"],
+                DatabaseConfig["db.password"]
         )
     }
 }
