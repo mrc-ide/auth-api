@@ -29,6 +29,12 @@ apply plugin: 'docker'
 
 mainClassName = "org.mrc.ide.auth.api.MainKt"
 
+repositories {
+    maven {
+        url "https://raw.githubusercontent.com/mrc-ide/serialization/mvn-repo/"
+    }
+}
+
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
@@ -44,6 +50,8 @@ dependencies {
     compile "com.offbytwo:docopt:0.6.0.20150202"
     compile "com.google.code.gson:gson:2.8.2"
     compile "com.github.salomonbrys.kotson:kotson:2.5.0"
+
+    compile "org.mrc.ide:serialization:1.0"
 
     compile project(":databaseInterface")
     compile project(":models")
