@@ -5,10 +5,13 @@ import org.mrc.ide.auth.security.KeyHelper
 import org.mrc.ide.auth.security.WebTokenHelper
 import org.mrc.ide.serialization.DefaultSerializer
 import org.slf4j.LoggerFactory
-import spark.Spark
+import spark.Request
+import spark.Response
 import java.net.BindException
 import java.net.ServerSocket
 import kotlin.system.exitProcess
+
+import spark.Spark as spk
 
 fun main(args: Array<String>) {
 
@@ -18,7 +21,20 @@ fun main(args: Array<String>) {
             appConfig.tokenLifespan,
             KeyHelper("").keyPair))
 
-    AuthApi(appConfig, router)
+    AuthApi(appConfig, router).run()
+}
+
+fun addTrailingSlashes(req: Request, res: Response)
+{
+    if (!req.pathInfo().endsWith("/"))
+    {
+        var path = req.pathInfo() + "/"
+        if (req.queryString() != null)
+        {
+            path += "?" + req.queryString()
+        }
+        res.redirect(path)
+    }
 }
 
 class AuthApi(private val config: AppConfig,
@@ -29,8 +45,10 @@ class AuthApi(private val config: AppConfig,
 
     fun run() {
 
-        Spark.redirect.get("/", urlBase)
         setupPort()
+
+        spk.redirect.get("/", urlBase)
+        spk.before("*", ::addTrailingSlashes)
 
         router.mapEndpoints(urlBase)
     }
@@ -39,7 +57,7 @@ class AuthApi(private val config: AppConfig,
         val port = config.appPort
 
         var attempts = 5
-        Spark.port(port)
+        spk.port(port)
 
         while (!isPortAvailable(port) && attempts > 0) {
             logger.info("Waiting for port $port to be available, $attempts attempts remaining")
