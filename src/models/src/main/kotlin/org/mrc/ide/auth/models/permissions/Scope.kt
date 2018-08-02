@@ -1,7 +1,4 @@
-package org.mrc.ide.auth.models
-
-import org.mrc.ide.auth.models.permissions.AssociateRole
-import org.mrc.ide.auth.models.permissions.RoleAssignment
+package org.mrc.ide.auth.models.permissions
 
 sealed class Scope  (val value: String)
 {
@@ -61,12 +58,12 @@ sealed class Scope  (val value: String)
         {
             if (role.scopePrefix.isNullOrEmpty())
             {
-                return Global()
+                return Scope.Global()
             }
             else
             {
 
-                return Specific(role.scopePrefix!!, role.scopeId!!)
+                return Scope.Specific(role.scopePrefix!!, role.scopeId!!)
             }
         }
 
@@ -74,12 +71,12 @@ sealed class Scope  (val value: String)
         {
             if (role.scopePrefix.isNullOrEmpty())
             {
-                return Global()
+                return Scope.Global()
             }
             else
             {
 
-                return Specific(role.scopePrefix!!, role.scopeId!!)
+                return Scope.Specific(role.scopePrefix!!, role.scopeId!!)
             }
         }
 

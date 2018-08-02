@@ -2,15 +2,10 @@ package org.mrc.ide.auth.api.routing
 
 import org.mrc.ide.auth.api.ActionContext
 import org.mrc.ide.auth.api.DirectActionContext
-import org.mrc.ide.auth.api.Serializer
 import org.mrc.ide.auth.api.controllers.AuthenticationController
-import org.mrc.ide.auth.api.routing.Endpoint
-import org.mrc.ide.auth.api.routing.EndpointDefinition
-import org.mrc.ide.auth.api.routing.basicAuth
-import org.mrc.ide.auth.api.routing.json
-import org.mrc.ide.auth.db.JooqContext
-import org.mrc.ide.auth.db.UserRepository
+import org.mrc.ide.auth.api.controllers.Controller
 import org.mrc.ide.auth.security.WebTokenHelper
+import org.mrc.ide.serialization.Serializer
 import org.slf4j.LoggerFactory
 import spark.Route
 import spark.Spark
@@ -23,7 +18,7 @@ class Router(private val serializer: Serializer,
     private val logger = LoggerFactory.getLogger(Router::class.java)
 
     private val endpoints: List<EndpointDefinition> = listOf(
-            Endpoint("/authenticate/", "authenticate", method = HttpMethod.post)
+            Endpoint("/authenticate/", AuthenticationController::class, "authenticate", method = HttpMethod.post)
                     .json()
                     .basicAuth())
 
@@ -60,28 +55,50 @@ class Router(private val serializer: Serializer,
             else -> throw Exception("Unsupported method ${endpoint.method.name}")
         }
 
+        endpoint.additionalSetup(fullUrl, webTokenHelper)
+
         return fullUrl
     }
 
     private fun getWrappedRoute(endpoint: EndpointDefinition): Route {
-        return Route({ req, res ->
+        return Route { req, res ->
             invokeControllerAction(endpoint, DirectActionContext(req, res))
-        })
+        }
     }
 
-    private fun invokeControllerAction(endpoint: EndpointDefinition, context: ActionContext): Any? {
+    private fun invokeControllerAction(endpoint: EndpointDefinition, context: ActionContext): Any?
+    {
         val actionName = endpoint.actionName
-        val controller = AuthenticationController(context, UserRepository(JooqContext().dsl), webTokenHelper)
-        val action = AuthenticationController::class.java.getMethod(actionName)
+        val controllerType = endpoint.controller.java
+        val controller = instantiateController(controllerType, context)
+        val action = controllerType.getMethod(actionName)
 
-        val result = try {
+        val result = try
+        {
             action.invoke(controller)
-        } catch (e: InvocationTargetException) {
+        }
+        catch (e: InvocationTargetException)
+        {
             logger.warn("Exception was thrown whilst using reflection to invoke " +
-                    "AuthenticationController.$actionName, see below for details")
+                    "$controllerType.$actionName, see below for details")
             throw e.targetException
         }
         return endpoint.postProcess(result, context)
+    }
+
+    private fun instantiateController(controllerType: Class<*>, context: ActionContext): Controller
+    {
+        val constructor = try
+        {
+            controllerType.getConstructor(ActionContext::class.java)
+        }
+        catch (e: NoSuchMethodException)
+        {
+            throw NoSuchMethodException("There is a problem with $controllerType. " +
+                    "All controllers must have a secondary constructor that takes" +
+                    "an ActionContext")
+        }
+        return constructor.newInstance(context) as Controller
     }
 
 }

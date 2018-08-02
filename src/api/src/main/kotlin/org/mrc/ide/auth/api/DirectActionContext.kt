@@ -18,7 +18,7 @@ class DirectActionContext(private val context: SparkWebContext) : ActionContext 
 
     override fun contentType(): String = request.contentType()
     override fun queryParams(key: String): String? = request.queryParams(key)
-
+    override fun params(key: String): String = request.params(key)
 
     override val userProfile: CommonProfile? by lazy {
         val manager = ProfileManager<CommonProfile>(context)
@@ -27,4 +27,5 @@ class DirectActionContext(private val context: SparkWebContext) : ActionContext 
     override val username by lazy {
         userProfile?.id
     }
+
 }

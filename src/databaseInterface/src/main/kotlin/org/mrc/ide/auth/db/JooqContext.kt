@@ -11,11 +11,9 @@ open class JooqContext(private val dbName: String? = null) : AutoCloseable
     private val conn = getConnection()
     val dsl = createDSL(conn)
 
-    protected open fun loadSettings() = DatabaseSettings.fromConfig()
-
     private fun getConnection(): Connection
     {
-        val config = loadSettings()
+        val config = DatabaseConfigFromConfigProperties
         val url = config.url(dbName)
         try
         {

@@ -1,9 +1,9 @@
 package org.mrc.ide.auth.api
 
 import org.mrc.ide.auth.api.routing.Router
-import org.mrc.ide.auth.models.Config
 import org.mrc.ide.auth.security.KeyHelper
 import org.mrc.ide.auth.security.WebTokenHelper
+import org.mrc.ide.serialization.DefaultSerializer
 import org.slf4j.LoggerFactory
 import spark.Spark
 import java.net.BindException
@@ -12,22 +12,22 @@ import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
 
-    val appConfig = Config(AuthApi::class.java.classLoader
-            .getResource("config.properties")
-            .path)
+    val appConfig = AuthApiAppConfig
 
-    val router = Router(ApiSerializer(), WebTokenHelper(appConfig, KeyHelper("").keyPair))
+    val router = Router(DefaultSerializer.instance, WebTokenHelper(appConfig.tokenIssuer,
+            appConfig.tokenLifespan,
+            KeyHelper("").keyPair))
 
     AuthApi(appConfig, router)
 }
 
-class AuthApi(private val config: Config,
+class AuthApi(private val config: AppConfig,
               private val router: Router) {
 
     private val logger = LoggerFactory.getLogger(AuthApi::class.java)
     private val urlBase = "/v1"
 
-    fun run(){
+    fun run() {
 
         Spark.redirect.get("/", urlBase)
         setupPort()
@@ -36,7 +36,7 @@ class AuthApi(private val config: Config,
     }
 
     private fun setupPort() {
-        val port = config.getInt("app.port")
+        val port = config.appPort
 
         var attempts = 5
         Spark.port(port)

@@ -15,5 +15,6 @@ interface ActionContext
     val username: String?
     fun queryParams(key: String): String?
     fun contentType(): String
+    fun params(key: String): String
 
 }

@@ -1,7 +1,5 @@
 package org.mrc.ide.auth.models.permissions
 
-import org.mrc.ide.auth.models.Scope
-
 // A permission is just a name, like 'coverage.read'
 // To be usable, it must be reified with a scope, like:
 // */coverage.read (for the global scope)

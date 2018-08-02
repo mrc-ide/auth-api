@@ -4,7 +4,7 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.util.*
 
-open class Config(path: String) : ConfigWrapper {
+class ConfigProperties(path: String) {
 
     private val properties = Properties().apply {
         val file = File(path)
@@ -16,7 +16,7 @@ open class Config(path: String) : ConfigWrapper {
         }
     }
 
-    override operator fun get(key: String): String {
+    operator fun get(key: String): String {
         val x = properties[key]
         if (x != null) {
             return x as String
@@ -25,8 +25,8 @@ open class Config(path: String) : ConfigWrapper {
         }
     }
 
-    override fun getInt(key: String) = get(key).toInt()
-    override fun getBool(key: String) = get(key).toBoolean()
+    fun getInt(key: String) = get(key).toInt()
+    fun getBool(key: String) = get(key).toBoolean()
 }
 
 class MissingConfigurationKey(val key: String) : Exception("Missing configuration key '$key'")

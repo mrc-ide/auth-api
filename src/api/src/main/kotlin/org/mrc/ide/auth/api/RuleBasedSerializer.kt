@@ -6,6 +6,8 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import org.mrc.ide.auth.models.helpers.Rule
 import org.mrc.ide.auth.models.helpers.SerializationRule
+import org.mrc.ide.serialization.DefaultSerializer
+import org.mrc.ide.serialization.Serializer
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
 
@@ -32,7 +34,7 @@ inline fun <reified T : Any> applyRules(it: SerializerArg<T>, json: JsonObject)
 
 fun <T> removeFieldIfNull(original: T, json: JsonObject,
                           property: KProperty1<T, Any?>,
-                          serializer: Serializer = ApiSerializer.instance)
+                          serializer: Serializer = DefaultSerializer.instance)
 {
     if (property.get(original) == null)
     {

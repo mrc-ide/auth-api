@@ -1,6 +1,5 @@
 package org.mrc.ide.auth.models.permissions
 
-import org.mrc.ide.auth.models.Scope
 import java.beans.ConstructorProperties
 
 data class ReifiedRole(
