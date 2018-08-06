@@ -66,7 +66,7 @@ class Router(private val serializer: Serializer,
         }
     }
 
-    private fun invokeControllerAction(endpoint: EndpointDefinition, context: ActionContext): Any?
+    fun invokeControllerAction(endpoint: EndpointDefinition, context: ActionContext): Any?
     {
         val actionName = endpoint.actionName
         val controllerType = endpoint.controller.java

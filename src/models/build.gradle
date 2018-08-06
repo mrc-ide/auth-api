@@ -1,0 +1,9 @@
+repositories {
+    maven {
+        url "https://raw.githubusercontent.com/mrc-ide/serialization/mvn-repo/"
+    }
+}
+
+dependencies {
+    compile "org.mrc.ide:serialization:1.0"
+}

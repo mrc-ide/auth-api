@@ -56,6 +56,7 @@ dependencies {
     compile project(":databaseInterface")
     compile project(":models")
     compile project(":security")
+    compile project(":emails")
 
     testCompile "junit:junit:4.12"
     testCompile "org.mockito:mockito-core:2.+"

@@ -1,6 +1,6 @@
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import org.mrc.ide.auth.SodiumPasswordEncoder
+import org.mrc.ide.auth.security.SodiumPasswordEncoder
 
 class SodiumTests
 {

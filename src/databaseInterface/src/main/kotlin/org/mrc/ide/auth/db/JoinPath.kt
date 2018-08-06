@@ -4,15 +4,15 @@ import org.jooq.*
 import org.jooq.impl.TableImpl
 
 /**
- * A JoinPath allows us to automatically construct the series of join operations needed
+ * A org.mrc.ide.auth.db.JoinPath allows us to automatically construct the series of join operations needed
  * to get from type A -> B -> ... --> Z, assuming that there is a single foreign key between
  * each pair of tables, either from A->B or B->A.
  *
  * This is the same thing as jOOQ's join(...).onKey(), but because we have an ordering on the
  * tables we can avoid ambiguity which sometimes causes it to fail.
  *
- * It is intended that you would use this using the two extension methods below, `fromJoinPath`
- * at the beginning of a query, and `joinPath` to add more joins on to an existing query.
+ * It is intended that you would use this using the two extension methods below, `org.mrc.ide.auth.db.fromJoinPath`
+ * at the beginning of a query, and `org.mrc.ide.auth.db.joinPath` to add more joins on to an existing query.
  */
 class JoinPath(tables: Iterable<TableImpl<*>>, val joinType: JoinType)
 {

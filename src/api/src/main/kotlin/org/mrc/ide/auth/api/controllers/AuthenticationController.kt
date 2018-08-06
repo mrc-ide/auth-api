@@ -1,17 +1,17 @@
 package org.mrc.ide.auth.api.controllers
 
 import org.mrc.ide.auth.api.*
+import org.mrc.ide.auth.api.security.user
 import org.mrc.ide.auth.db.UserRepository
 import org.mrc.ide.auth.models.AuthenticationResponse
 import org.mrc.ide.auth.models.FailedAuthentication
 import org.mrc.ide.auth.models.SuccessfulAuthentication
 import org.mrc.ide.auth.security.WebTokenHelper
 
-
 class AuthenticationController(private val context: ActionContext,
                                private val userRepository: UserRepository,
-                               private val tokenHelper: WebTokenHelper,
-                               private val htmlFormHelpers: FormHelpers = HTMLFormHelpers()) {
+                               private val htmlFormHelpers: FormHelpers = HTMLFormHelpers(),
+                               private val tokenHelper: WebTokenHelper) {
 
     fun authenticate(): AuthenticationResponse {
         val validationResult = htmlFormHelpers.checkForm(context,

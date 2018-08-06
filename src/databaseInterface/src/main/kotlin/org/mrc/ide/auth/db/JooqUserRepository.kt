@@ -12,9 +12,14 @@ import org.mrc.ide.auth.models.permissions.*
 interface UserRepository {
     fun updateLastLoggedIn(username: String)
     fun getUserByEmail(email: String): User?
+    fun setPassword(username: String, plainPassword: String)
 }
 
 class JooqUserRepository(val dsl: DSLContext): UserRepository {
+
+    override fun setPassword(username: String, plainPassword: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override fun updateLastLoggedIn(username: String)
     {

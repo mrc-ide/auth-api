@@ -1,5 +1,6 @@
 .idea
 *.pyc
+src/src.iml
 src/*/build/*
 src/*/out/
 src/.gradle

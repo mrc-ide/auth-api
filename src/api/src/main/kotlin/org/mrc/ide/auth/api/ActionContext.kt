@@ -16,5 +16,8 @@ interface ActionContext
     fun queryParams(key: String): String?
     fun contentType(): String
     fun params(key: String): String
-
+    fun <T : Any> postData(klass: Class<T>): T
 }
+
+
+inline fun <reified T : Any> ActionContext.postData() = this.postData(T::class.java)

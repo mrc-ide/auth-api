@@ -32,6 +32,11 @@ var CommonProfile.userPermissions: PermissionSet
     get() = this.getAttributeOrDefault(PERMISSIONS, PermissionSet())
     set(value) = this.addAttribute(PERMISSIONS, value)
 
+
+var CommonProfile.mismatchedURL: String?
+    get() = this.getAttribute(MISMATCHED_URL) as String?
+    set(value) = this.addAttribute(MISMATCHED_URL, value)
+
 private fun <T> CommonProfile.getAttributeOrDefault(key: String, default: T): T
 {
     if (this.attributes.containsKey(key))

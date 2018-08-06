@@ -1,13 +1,17 @@
 package org.mrc.ide.auth.api
 
+import org.mrc.ide.serialization.DefaultSerializer
+import org.mrc.ide.serialization.ModelBinder
 import org.pac4j.core.profile.CommonProfile
 import org.pac4j.core.profile.ProfileManager
 import org.pac4j.sparkjava.SparkWebContext
 import spark.Request
 import spark.Response
 
-
 class DirectActionContext(private val context: SparkWebContext) : ActionContext {
+    override fun <T : Any> postData(klass: Class<T>): T = ModelBinder(DefaultSerializer.instance)
+            .deserialize(request.body(), klass)
+
     override val request
         get() = context.sparkRequest
     private val response

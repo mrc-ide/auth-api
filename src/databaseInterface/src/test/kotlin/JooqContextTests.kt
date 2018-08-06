@@ -1,6 +1,5 @@
-package org.mrc.ide.auth.db
-
 import org.junit.Test
+import org.mrc.ide.auth.db.JooqContext
 
 class JooqContextTests {
 

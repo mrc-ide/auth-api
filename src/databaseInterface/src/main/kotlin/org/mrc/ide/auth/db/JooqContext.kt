@@ -14,10 +14,10 @@ open class JooqContext(private val dbName: String? = null) : AutoCloseable
     private fun getConnection(): Connection
     {
         val config = DatabaseConfigFromConfigProperties
-        val url = config.url(dbName)
+        val url = DatabaseConfigFromConfigProperties.url(dbName)
         try
         {
-            return DriverManager.getConnection(url, config.username, config.password)
+            return DriverManager.getConnection(url, DatabaseConfigFromConfigProperties.username, DatabaseConfigFromConfigProperties.password)
         }
         catch (e: Exception)
         {

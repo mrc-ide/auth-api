@@ -23,7 +23,7 @@ object DatabaseConfigFromConfigProperties : DatabaseConfig {
     override val password = configProperties["db.password"]
 
     fun url(name: String? = null): String {
-        val dbName = name ?: this.name
+        val dbName = name ?: DatabaseConfigFromConfigProperties.name
         return "jdbc:postgresql://$host:$port/$dbName"
     }
 }
