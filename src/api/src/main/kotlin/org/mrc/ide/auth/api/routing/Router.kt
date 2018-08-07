@@ -12,24 +12,18 @@ import spark.Spark
 import spark.route.HttpMethod
 import java.lang.reflect.InvocationTargetException
 
-class Router(private val serializer: Serializer,
+class Router(private val config: RouteConfig,
+             private val serializer: Serializer,
              private val webTokenHelper: WebTokenHelper) {
 
     private val logger = LoggerFactory.getLogger(Router::class.java)
 
-    private val endpoints: List<EndpointDefinition> = listOf(
-            Endpoint("/authenticate/", AuthenticationController::class, "authenticate", method = HttpMethod.post)
-                    .json()
-                    .basicAuth())
-
-    companion object
-    {
+    companion object {
         val urls: MutableList<String> = mutableListOf()
     }
 
-    fun mapEndpoints(urlBase: String): List<String>
-    {
-        urls.addAll(endpoints
+    fun mapEndpoints(urlBase: String): List<String> {
+        urls.addAll(config.endpoints
                 .sortedBy { it.urlFragment }
                 .map { mapEndpoint(it, urlBase) }
         )
@@ -66,19 +60,15 @@ class Router(private val serializer: Serializer,
         }
     }
 
-    fun invokeControllerAction(endpoint: EndpointDefinition, context: ActionContext): Any?
-    {
+    fun invokeControllerAction(endpoint: EndpointDefinition, context: ActionContext): Any? {
         val actionName = endpoint.actionName
         val controllerType = endpoint.controller.java
         val controller = instantiateController(controllerType, context)
         val action = controllerType.getMethod(actionName)
 
-        val result = try
-        {
+        val result = try {
             action.invoke(controller)
-        }
-        catch (e: InvocationTargetException)
-        {
+        } catch (e: InvocationTargetException) {
             logger.warn("Exception was thrown whilst using reflection to invoke " +
                     "$controllerType.$actionName, see below for details")
             throw e.targetException
@@ -86,14 +76,10 @@ class Router(private val serializer: Serializer,
         return endpoint.postProcess(result, context)
     }
 
-    private fun instantiateController(controllerType: Class<*>, context: ActionContext): Controller
-    {
-        val constructor = try
-        {
+    private fun instantiateController(controllerType: Class<*>, context: ActionContext): Controller {
+        val constructor = try {
             controllerType.getConstructor(ActionContext::class.java)
-        }
-        catch (e: NoSuchMethodException)
-        {
+        } catch (e: NoSuchMethodException) {
             throw NoSuchMethodException("There is a problem with $controllerType. " +
                     "All controllers must have a secondary constructor that takes" +
                     "an ActionContext")

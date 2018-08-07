@@ -11,7 +11,6 @@ dependencies {
     testCompile "com.beust:klaxon:2.1.8"
 
     compile project(":models")
-    compile project(":databaseInterface")
 
 }
 

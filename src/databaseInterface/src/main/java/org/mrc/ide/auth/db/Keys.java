@@ -11,6 +11,7 @@ import org.jooq.Identity;
 import org.jooq.UniqueKey;
 import org.jooq.impl.Internal;
 import org.mrc.ide.auth.db.tables.AppUser;
+import org.mrc.ide.auth.db.tables.OnetimeToken;
 import org.mrc.ide.auth.db.tables.Permission;
 import org.mrc.ide.auth.db.tables.Role;
 import org.mrc.ide.auth.db.tables.RolePermission;
@@ -18,6 +19,7 @@ import org.mrc.ide.auth.db.tables.UserGroup;
 import org.mrc.ide.auth.db.tables.UserGroupMembership;
 import org.mrc.ide.auth.db.tables.UserGroupRole;
 import org.mrc.ide.auth.db.tables.records.AppUserRecord;
+import org.mrc.ide.auth.db.tables.records.OnetimeTokenRecord;
 import org.mrc.ide.auth.db.tables.records.PermissionRecord;
 import org.mrc.ide.auth.db.tables.records.RolePermissionRecord;
 import org.mrc.ide.auth.db.tables.records.RoleRecord;
@@ -51,6 +53,7 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final UniqueKey<AppUserRecord> APP_USER_PKEY = UniqueKeys0.APP_USER_PKEY;
+    public static final UniqueKey<OnetimeTokenRecord> ONETIME_TOKEN_PKEY = UniqueKeys0.ONETIME_TOKEN_PKEY;
     public static final UniqueKey<PermissionRecord> PERMISSION_PKEY = UniqueKeys0.PERMISSION_PKEY;
     public static final UniqueKey<RoleRecord> ROLE_PKEY = UniqueKeys0.ROLE_PKEY;
     public static final UniqueKey<RolePermissionRecord> ROLE_PERMISSION_PKEY = UniqueKeys0.ROLE_PERMISSION_PKEY;
@@ -77,6 +80,7 @@ public class Keys {
 
     private static class UniqueKeys0 {
         public static final UniqueKey<AppUserRecord> APP_USER_PKEY = Internal.createUniqueKey(AppUser.APP_USER, "app_user_pkey", AppUser.APP_USER.USERNAME);
+        public static final UniqueKey<OnetimeTokenRecord> ONETIME_TOKEN_PKEY = Internal.createUniqueKey(OnetimeToken.ONETIME_TOKEN, "onetime_token_pkey", OnetimeToken.ONETIME_TOKEN.TOKEN);
         public static final UniqueKey<PermissionRecord> PERMISSION_PKEY = Internal.createUniqueKey(Permission.PERMISSION, "permission_pkey", Permission.PERMISSION.NAME);
         public static final UniqueKey<RoleRecord> ROLE_PKEY = Internal.createUniqueKey(Role.ROLE, "role_pkey", Role.ROLE.ID);
         public static final UniqueKey<RolePermissionRecord> ROLE_PERMISSION_PKEY = Internal.createUniqueKey(RolePermission.ROLE_PERMISSION, "role_permission_pkey", RolePermission.ROLE_PERMISSION.ROLE, RolePermission.ROLE_PERMISSION.PERMISSION);

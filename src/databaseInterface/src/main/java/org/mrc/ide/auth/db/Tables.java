@@ -7,6 +7,7 @@ package org.mrc.ide.auth.db;
 import javax.annotation.Generated;
 
 import org.mrc.ide.auth.db.tables.AppUser;
+import org.mrc.ide.auth.db.tables.OnetimeToken;
 import org.mrc.ide.auth.db.tables.Permission;
 import org.mrc.ide.auth.db.tables.Role;
 import org.mrc.ide.auth.db.tables.RolePermission;
@@ -32,6 +33,11 @@ public class Tables {
      * The table <code>public.app_user</code>.
      */
     public static final AppUser APP_USER = org.mrc.ide.auth.db.tables.AppUser.APP_USER;
+
+    /**
+     * The table <code>public.onetime_token</code>.
+     */
+    public static final OnetimeToken ONETIME_TOKEN = org.mrc.ide.auth.db.tables.OnetimeToken.ONETIME_TOKEN;
 
     /**
      * The table <code>public.permission</code>.

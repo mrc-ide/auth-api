@@ -8,6 +8,7 @@ import org.pac4j.core.profile.CommonProfile
 import org.pac4j.sparkjava.SparkWebContext
 import org.mrc.ide.auth.api.errors.MissingRequiredPermissionError
 import org.mrc.ide.auth.models.permissions.PermissionSet
+import org.mrc.ide.auth.models.permissions.ReifiedPermission
 import org.mrc.ide.auth.security.WebTokenHelper
 import org.mrc.ide.serialization.models.ErrorInfo
 
@@ -16,7 +17,8 @@ class TokenVerifyingConfigFactory(webTokenHelper: WebTokenHelper,
 ) : ConfigFactory {
 
     private val wrappedClients: List<SecurityClientWrapper> = listOf(
-            CompressedJWTHeaderClient.Wrapper(webTokenHelper)
+            CompressedJWTHeaderClient.Wrapper(webTokenHelper),
+            CompressedJWTParameterClient.Wrapper(webTokenHelper, JooqOneTimeTokenChecker())
     )
 
     private val clients = wrappedClients.map { it.client }
@@ -49,14 +51,30 @@ class TokenActionAdapter(wrappedClients: List<SecurityClientWrapper>)
     : HttpActionAdapter() {
     private val unauthorizedResponse: List<ErrorInfo> = wrappedClients.map { it.authorizationError }
 
+    private fun forbiddenResponse(missingPermissions: Set<ReifiedPermission>, mismatchedURL: String?): List<ErrorInfo>
+    {
+        val errors = mutableListOf<ErrorInfo>()
+        if (missingPermissions.any())
+        {
+            errors.addAll(MissingRequiredPermissionError(missingPermissions).problems)
+        }
+        if (mismatchedURL != null)
+        {
+            errors.add(ErrorInfo("forbidden", mismatchedURL))
+        }
+        return errors
+    }
 
-    override fun adapt(code: Int, context: SparkWebContext): Any? = when (code) {
-        HttpConstants.UNAUTHORIZED -> {
+    override fun adapt(code: Int, context: SparkWebContext): Any? = when (code)
+    {
+        HttpConstants.UNAUTHORIZED ->
+        {
             haltWithError(code, context, unauthorizedResponse)
         }
-        HttpConstants.FORBIDDEN -> {
+        HttpConstants.FORBIDDEN ->
+        {
             val profile = DirectActionContext(context).userProfile!!
-            haltWithError(code, context, MissingRequiredPermissionError(profile.missingPermissions).problems.toList())
+            haltWithError(code, context, forbiddenResponse(profile.missingPermissions, profile.mismatchedURL))
         }
         else -> super.adapt(code, context)
     }

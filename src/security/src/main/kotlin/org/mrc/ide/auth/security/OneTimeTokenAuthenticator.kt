@@ -23,4 +23,14 @@ class OneTimeTokenAuthenticator(
             throw CredentialsException("Token has already been used (or never existed)")
         }
     }
+
+    override fun handleUrlAttribute(credentials: TokenCredentials, jwt: JWT)
+    {
+        val claims = jwt.jwtClaimsSet
+        val url = claims.getClaim("url")
+        if (url !is String || url.isEmpty())
+        {
+            throw CredentialsException("No 'url' claim provided. Token is invalid")
+        }
+    }
 }

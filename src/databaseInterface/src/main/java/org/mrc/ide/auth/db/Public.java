@@ -15,6 +15,7 @@ import org.jooq.Sequence;
 import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
 import org.mrc.ide.auth.db.tables.AppUser;
+import org.mrc.ide.auth.db.tables.OnetimeToken;
 import org.mrc.ide.auth.db.tables.Permission;
 import org.mrc.ide.auth.db.tables.Role;
 import org.mrc.ide.auth.db.tables.RolePermission;
@@ -36,7 +37,7 @@ import org.mrc.ide.auth.db.tables.UserGroupRole;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Public extends SchemaImpl {
 
-    private static final long serialVersionUID = -1124663366;
+    private static final long serialVersionUID = 2085546278;
 
     /**
      * The reference instance of <code>public</code>
@@ -47,6 +48,11 @@ public class Public extends SchemaImpl {
      * The table <code>public.app_user</code>.
      */
     public final AppUser APP_USER = org.mrc.ide.auth.db.tables.AppUser.APP_USER;
+
+    /**
+     * The table <code>public.onetime_token</code>.
+     */
+    public final OnetimeToken ONETIME_TOKEN = org.mrc.ide.auth.db.tables.OnetimeToken.ONETIME_TOKEN;
 
     /**
      * The table <code>public.permission</code>.
@@ -116,6 +122,7 @@ public class Public extends SchemaImpl {
     private final List<Table<?>> getTables0() {
         return Arrays.<Table<?>>asList(
             AppUser.APP_USER,
+            OnetimeToken.ONETIME_TOKEN,
             Permission.PERMISSION,
             Role.ROLE,
             RolePermission.ROLE_PERMISSION,

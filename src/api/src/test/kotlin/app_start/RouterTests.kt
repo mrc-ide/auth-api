@@ -14,7 +14,7 @@ class RouterTests
     fun `router can invoke action`()
     {
         TestController.invoked = false
-        val router = Router(mock(), mock())
+        val router = Router(mock(), mock(), mock())
         router.invokeControllerAction(Endpoint("/", TestController::class, "test"), mock())
         assertThat(TestController.invoked).isTrue()
     }

@@ -6,6 +6,7 @@ interface DatabaseConfig {
     val host: String
     val port: String
     val name: String
+    val templateName: String
     val username: String
     val password: String
 }
@@ -21,6 +22,7 @@ object DatabaseConfigFromConfigProperties : DatabaseConfig {
     override val name = configProperties["db.name"]
     override val username = configProperties["db.username"]
     override val password = configProperties["db.password"]
+    override val templateName = configProperties["testdb.template_name"]
 
     fun url(name: String? = null): String {
         val dbName = name ?: DatabaseConfigFromConfigProperties.name

@@ -21,16 +21,23 @@ open class CompressedTokenAuthenticator(
         super.createJwtProfile(credentials, jwt)
         val claims = jwt.jwtClaimsSet
         val issuer = claims.issuer
+        if (issuer != tokenHelper.issuer)
+        {
+            throw CredentialsException("Token was issued by '$issuer'. Must be issued by '${tokenHelper.issuer}'")
+        }
         val tokenType = claims.getClaim("token_type").toString()
         if (tokenType != expectedType.toString())
         {
             throw CredentialsException("Wrong type of token was provided. " +
                     "Expected '$expectedType', was actually '$tokenType'")
         }
-        if (issuer != tokenHelper.issuer)
-        {
-            throw CredentialsException("Token was issued by '$issuer'. Must be issued by '${tokenHelper.issuer}'")
-        }
+        handleUrlAttribute(credentials, jwt)
+    }
+
+    protected open fun handleUrlAttribute(credentials: TokenCredentials, jwt: JWT)
+    {
+        // OAuth access tokens are allowed to access any URL
+        credentials.userProfile?.addAttribute("url", "*")
     }
 
 }

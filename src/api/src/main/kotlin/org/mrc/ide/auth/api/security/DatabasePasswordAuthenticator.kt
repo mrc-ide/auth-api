@@ -3,15 +3,17 @@ package org.mrc.ide.auth.api.security
 import org.mrc.ide.auth.db.JooqContext
 import org.mrc.ide.auth.db.JooqUserRepository
 import org.mrc.ide.auth.models.User
-import org.mrc.ide.auth.security.UserHelper
+import org.mrc.ide.auth.security.SodiumPasswordEncoder
 import org.pac4j.core.context.WebContext
 import org.pac4j.core.credentials.UsernamePasswordCredentials
 import org.pac4j.core.credentials.authenticator.Authenticator
+import org.pac4j.core.credentials.password.PasswordEncoder
 import org.pac4j.core.exception.CredentialsException
 import org.pac4j.core.profile.CommonProfile
 import org.pac4j.core.util.CommonHelper
 
-class DatabasePasswordAuthenticator : Authenticator<UsernamePasswordCredentials>
+class DatabasePasswordAuthenticator(val passwordEncoder: PasswordEncoder = SodiumPasswordEncoder())
+    : Authenticator<UsernamePasswordCredentials>
 {
     override fun validate(credentials: UsernamePasswordCredentials?, context: WebContext?)
     {
@@ -54,7 +56,7 @@ class DatabasePasswordAuthenticator : Authenticator<UsernamePasswordCredentials>
                 {
                     throwsException("User does not have a password")
                 }
-                if (!UserHelper.encoder.matches(password, user.passwordHash))
+                if (!passwordEncoder.matches(password, user.passwordHash))
                 {
                     throwsException("Provided password does not match password on record")
                 }

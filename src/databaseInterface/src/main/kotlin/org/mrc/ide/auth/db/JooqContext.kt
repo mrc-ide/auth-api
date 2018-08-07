@@ -13,7 +13,6 @@ open class JooqContext(private val dbName: String? = null) : AutoCloseable
 
     private fun getConnection(): Connection
     {
-        val config = DatabaseConfigFromConfigProperties
         val url = DatabaseConfigFromConfigProperties.url(dbName)
         try
         {

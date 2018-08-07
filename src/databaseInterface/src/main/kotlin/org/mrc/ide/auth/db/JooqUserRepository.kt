@@ -8,21 +8,27 @@ import java.sql.Timestamp
 import java.time.Instant
 import org.mrc.ide.auth.models.*
 import org.mrc.ide.auth.models.permissions.*
+import org.mrc.ide.auth.security.SodiumPasswordEncoder
+import org.pac4j.core.credentials.password.PasswordEncoder
 
-interface UserRepository {
+interface UserRepository: Repository {
     fun updateLastLoggedIn(username: String)
     fun getUserByEmail(email: String): User?
     fun setPassword(username: String, plainPassword: String)
 }
 
-class JooqUserRepository(val dsl: DSLContext): UserRepository {
+class JooqUserRepository(val dsl: DSLContext, private val passwordEncoder: PasswordEncoder): UserRepository {
+
+    constructor(): this(JooqContext().dsl, SodiumPasswordEncoder())
 
     override fun setPassword(username: String, plainPassword: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val hashedPassword = passwordEncoder.encode(plainPassword)
+        dsl.update(APP_USER).set(APP_USER.PASSWORD_HASH, hashedPassword)
+                .where(APP_USER.USERNAME.eq(username))
+                .execute()
     }
 
-    override fun updateLastLoggedIn(username: String)
-    {
+    override fun updateLastLoggedIn(username: String) {
         dsl.update(APP_USER)
                 .set(APP_USER.LAST_LOGGED_IN, Timestamp.from(Instant.now()))
                 .where(APP_USER.USERNAME.eq(username))
@@ -31,17 +37,14 @@ class JooqUserRepository(val dsl: DSLContext): UserRepository {
 
     override fun getUserByEmail(email: String): User? {
         val user = dsl.fetchAny(APP_USER, caseInsensitiveEmailMatch(email))
-        return if (user != null)
-        {
+        return if (user != null) {
             val records = getRolesAndPermissions(user.username)
             return User(
                     user.into(UserProperties::class.java),
                     records.map(this::mapRole).distinct(),
                     records.filter { it[PERMISSION.NAME] != null }.map(this::mapPermission))
 
-        }
-        else
-        {
+        } else {
             null
         }
     }
@@ -50,28 +53,21 @@ class JooqUserRepository(val dsl: DSLContext): UserRepository {
 
     private fun mapRole(record: Record) = ReifiedRole(record[ROLE.NAME], mapScope(record))
 
-    private fun mapScope(record: Record): Scope
-    {
+    private fun mapScope(record: Record): Scope {
         val scopePrefix = record[ROLE.SCOPE_PREFIX]
         val scopeId = record[USER_GROUP_ROLE.SCOPE_ID]
-        if (scopePrefix != null)
-        {
+        if (scopePrefix != null) {
             return Scope.Specific(scopePrefix, scopeId)
-        }
-        else
-        {
+        } else {
             return Scope.Global()
         }
     }
 
-    private fun caseInsensitiveEmailMatch(email: String)
-            = APP_USER.EMAIL.lower().eq(email.toLowerCase())
+    private fun caseInsensitiveEmailMatch(email: String) = APP_USER.EMAIL.lower().eq(email.toLowerCase())
 
-    private fun caseInsensitiveUsernameMatch(username: String)
-            = APP_USER.USERNAME.lower().eq(username.toLowerCase())
+    private fun caseInsensitiveUsernameMatch(username: String) = APP_USER.USERNAME.lower().eq(username.toLowerCase())
 
-    private fun getRolesAndPermissions(username: String): Result<Record>
-    {
+    private fun getRolesAndPermissions(username: String): Result<Record> {
         return dsl.select(PERMISSION.NAME)
                 .select(ROLE.NAME, ROLE.SCOPE_PREFIX)
                 .select(USER_GROUP_ROLE.SCOPE_ID)

@@ -7,8 +7,3 @@ interface OneTimeTokenChecker
      * performed. **/
     fun checkToken(uncompressedToken: String): Boolean
 }
-
-class NoopOneTimeTokenChecker : OneTimeTokenChecker
-{
-    override fun checkToken(uncompressedToken: String) = true
-}

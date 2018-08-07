@@ -1,12 +1,16 @@
 package org.mrc.ide.auth.api.controllers
 
 import org.mrc.ide.auth.api.ActionContext
+import org.mrc.ide.auth.api.AuthApi
 import org.mrc.ide.auth.api.errors.MissingRequiredParameterError
 import org.mrc.ide.auth.api.postData
+import org.mrc.ide.auth.db.JooqTokenRepository
+import org.mrc.ide.auth.db.JooqUserRepository
 import org.mrc.ide.auth.db.TokenRepository
 import org.mrc.ide.auth.db.UserRepository
 import org.mrc.ide.auth.emails.EmailManager
 import org.mrc.ide.auth.emails.PasswordSetEmail
+import org.mrc.ide.auth.emails.RealEmailManager
 import org.mrc.ide.auth.models.SetPassword
 import org.mrc.ide.auth.security.WebTokenHelper
 import org.mrc.ide.auth.security.deflated
@@ -21,6 +25,8 @@ class PasswordController(
         private val emailManager: EmailManager
 ) : Controller(context)
 {
+    constructor(context: ActionContext) : this(context, JooqUserRepository(), JooqTokenRepository(),
+            AuthApi.tokenHelper, RealEmailManager())
 
     private val logger = LoggerFactory.getLogger(PasswordController::class.java)
 

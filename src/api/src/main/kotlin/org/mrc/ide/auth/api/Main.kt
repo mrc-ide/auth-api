@@ -1,5 +1,6 @@
 package org.mrc.ide.auth.api
 
+import org.mrc.ide.auth.api.routing.ApiRouteConfig
 import org.mrc.ide.auth.api.routing.Router
 import org.mrc.ide.auth.security.KeyHelper
 import org.mrc.ide.auth.security.WebTokenHelper
@@ -13,35 +14,30 @@ import kotlin.system.exitProcess
 
 import spark.Spark as spk
 
-fun main(args: Array<String>) {
-
-    val appConfig = AuthApiAppConfig
-
-    val router = Router(DefaultSerializer.instance, WebTokenHelper(appConfig.tokenIssuer,
-            appConfig.tokenLifespan,
-            KeyHelper("").keyPair))
-
-    AuthApi(appConfig, router).run()
-}
-
-fun addTrailingSlashes(req: Request, res: Response)
-{
-    if (!req.pathInfo().endsWith("/"))
-    {
+fun addTrailingSlashes(req: Request, res: Response) {
+    if (!req.pathInfo().endsWith("/")) {
         var path = req.pathInfo() + "/"
-        if (req.queryString() != null)
-        {
+        if (req.queryString() != null) {
             path += "?" + req.queryString()
         }
         res.redirect(path)
     }
 }
 
-class AuthApi(private val config: AppConfig,
-              private val router: Router) {
+fun main(args: Array<String>) {
+
+    AuthApi().run()
+}
+
+class AuthApi {
 
     private val logger = LoggerFactory.getLogger(AuthApi::class.java)
     private val urlBase = "/v1"
+    private val router = Router(ApiRouteConfig,
+            DefaultSerializer.instance,
+            tokenHelper)
+
+    private val port = AppConfig.appPort
 
     fun run() {
 
@@ -54,7 +50,6 @@ class AuthApi(private val config: AppConfig,
     }
 
     private fun setupPort() {
-        val port = config.appPort
 
         var attempts = 5
         spk.port(port)
@@ -77,6 +72,12 @@ class AuthApi(private val config: AppConfig,
         } catch (e: BindException) {
             return false
         }
+    }
+
+    companion object {
+        val tokenHelper = WebTokenHelper(AppConfig.tokenIssuer,
+                AppConfig.tokenLifespan,
+                KeyHelper("").keyPair)
     }
 }
 
