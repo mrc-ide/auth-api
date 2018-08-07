@@ -6,6 +6,7 @@ import org.mrc.ide.auth.api.security.ApiAuthorizer
 import org.mrc.ide.auth.api.security.PermissionRequirement
 import org.mrc.ide.auth.api.security.TokenIssuingConfigFactory
 import org.mrc.ide.auth.api.security.TokenVerifyingConfigFactory
+import org.mrc.ide.auth.security.OneTimeTokenChecker
 import org.mrc.ide.auth.security.WebTokenHelper
 import org.mrc.ide.serialization.models.ContentTypes
 import org.pac4j.http.client.direct.DirectBasicAuthClient
@@ -46,7 +47,8 @@ data class Endpoint(
 
     private fun addSecurityFilter(url: String, webTokenHelper: WebTokenHelper) {
 
-        val configFactory = TokenVerifyingConfigFactory(webTokenHelper, requiredPermissions.toSet())
+        val configFactory = TokenVerifyingConfigFactory(webTokenHelper,
+                requiredPermissions.toSet())
 
         val config = configFactory.build()
 

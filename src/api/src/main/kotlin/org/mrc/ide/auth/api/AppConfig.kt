@@ -11,4 +11,5 @@ object AppConfig {
     val tokenIssuer = configProperties["token.issuer"]
     val tokenLifespan = configProperties["token.lifespan"].toLong()
     val appPort: Int = configProperties.getInt("app.port")
+    val url: String = configProperties["app.url"]
 }

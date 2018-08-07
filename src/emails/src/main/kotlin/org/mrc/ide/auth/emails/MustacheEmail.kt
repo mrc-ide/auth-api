@@ -1,7 +1,6 @@
 package org.mrc.ide.auth.emails
 
 import com.github.mustachejava.DefaultMustacheFactory
-import org.eclipse.jetty.util.Loader.getResource
 import java.io.StringWriter
 
 abstract class MustacheEmail : EmailData
@@ -16,7 +15,8 @@ abstract class MustacheEmail : EmailData
     private fun realize(templateFileName: String): String
     {
         return StringWriter().use { output ->
-            val templateURI = getResource("templates/$templateFileName")
+            val templateURI = MustacheEmail::class.java.classLoader
+                    .getResource("templates/$templateFileName")
             templateURI.openStream().bufferedReader().use { input ->
                 DefaultMustacheFactory()
                         .compile(input, "email")

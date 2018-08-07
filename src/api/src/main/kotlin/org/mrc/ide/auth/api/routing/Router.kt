@@ -30,7 +30,7 @@ class Router(private val config: RouteConfig,
         return urls
     }
 
-    private fun transform(x: Any?) = serializer.toJson(x)
+    private fun transform(x: Any?) = serializer.toResult(x)
 
     private fun mapEndpoint(
             endpoint: EndpointDefinition,
@@ -39,7 +39,7 @@ class Router(private val config: RouteConfig,
         val route = getWrappedRoute(endpoint)::handle
         val contentType = endpoint.contentType
 
-        logger.info("Mapping $fullUrl to ${endpoint.actionName} on AuthenticationController")
+        logger.info("Mapping $fullUrl to ${endpoint.actionName} on ${endpoint.controller.simpleName}")
         when (endpoint.method) {
             HttpMethod.get -> Spark.get(fullUrl, contentType, route, this::transform)
             HttpMethod.post -> Spark.post(fullUrl, contentType, route, this::transform)

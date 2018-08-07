@@ -63,6 +63,8 @@ dependencies {
     testCompile "com.nhaarman:mockito-kotlin:1.5.0"
     testCompile "org.assertj:assertj-core:3.9.1"
     testCompile "com.beust:klaxon:2.1.8"
+    testCompile project(":databaseInterface")
+    testCompile "khttp:khttp:0.1.0"
 }
 
 distDocker {

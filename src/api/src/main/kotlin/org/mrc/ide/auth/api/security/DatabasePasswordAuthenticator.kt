@@ -44,7 +44,7 @@ class DatabasePasswordAuthenticator(val passwordEncoder: PasswordEncoder = Sodiu
     private fun validate(email: String, password: String): User
     {
         return JooqContext().use { db ->
-            val repo = JooqUserRepository(db.dsl)
+            val repo = JooqUserRepository(db.dsl, passwordEncoder)
             val user = repo.getUserByEmail(email)
             if (user == null)
             {

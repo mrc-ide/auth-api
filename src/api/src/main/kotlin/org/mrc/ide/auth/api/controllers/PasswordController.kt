@@ -11,6 +11,7 @@ import org.mrc.ide.auth.db.UserRepository
 import org.mrc.ide.auth.emails.EmailManager
 import org.mrc.ide.auth.emails.PasswordSetEmail
 import org.mrc.ide.auth.emails.RealEmailManager
+import org.mrc.ide.auth.emails.WriteToDiskEmailManager
 import org.mrc.ide.auth.models.SetPassword
 import org.mrc.ide.auth.security.WebTokenHelper
 import org.mrc.ide.auth.security.deflated
@@ -26,7 +27,7 @@ class PasswordController(
 ) : Controller(context)
 {
     constructor(context: ActionContext) : this(context, JooqUserRepository(), JooqTokenRepository(),
-            AuthApi.tokenHelper, RealEmailManager())
+            AuthApi.tokenHelper, WriteToDiskEmailManager())
 
     private val logger = LoggerFactory.getLogger(PasswordController::class.java)
 

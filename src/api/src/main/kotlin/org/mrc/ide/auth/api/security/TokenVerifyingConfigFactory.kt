@@ -9,11 +9,12 @@ import org.pac4j.sparkjava.SparkWebContext
 import org.mrc.ide.auth.api.errors.MissingRequiredPermissionError
 import org.mrc.ide.auth.models.permissions.PermissionSet
 import org.mrc.ide.auth.models.permissions.ReifiedPermission
+import org.mrc.ide.auth.security.OneTimeTokenChecker
 import org.mrc.ide.auth.security.WebTokenHelper
 import org.mrc.ide.serialization.models.ErrorInfo
 
 class TokenVerifyingConfigFactory(webTokenHelper: WebTokenHelper,
-        private val requiredPermissions: Set<PermissionRequirement>
+                                  private val requiredPermissions: Set<PermissionRequirement>
 ) : ConfigFactory {
 
     private val wrappedClients: List<SecurityClientWrapper> = listOf(

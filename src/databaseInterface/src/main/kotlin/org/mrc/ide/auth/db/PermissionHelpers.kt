@@ -1,7 +1,7 @@
+package org.mrc.ide.auth.db
+
 import org.jooq.DSLContext
-import org.mrc.ide.auth.db.JooqContext
 import org.mrc.ide.auth.db.Tables.*
-import org.mrc.ide.auth.db.fieldsAsList
 import org.mrc.ide.auth.models.permissions.ReifiedRole
 import org.mrc.ide.auth.security.UnknownRoleException
 

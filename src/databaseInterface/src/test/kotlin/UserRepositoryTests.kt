@@ -1,10 +1,7 @@
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import org.mrc.ide.auth.db.JooqContext
-import org.mrc.ide.auth.db.JooqUserRepository
-import org.mrc.ide.auth.db.Tables
+import org.mrc.ide.auth.db.*
 import org.mrc.ide.auth.db.Tables.*
-import org.mrc.ide.auth.db.UserRepository
 import org.mrc.ide.auth.models.User
 import org.mrc.ide.auth.models.permissions.ReifiedPermission
 import org.mrc.ide.auth.models.permissions.ReifiedRole

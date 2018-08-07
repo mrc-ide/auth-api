@@ -1,0 +1,29 @@
+Hello {{name}},
+
+This is an automated email from Montagu. You are receiving this
+email because a new account has been created for you on Montagu,
+the digital delivery platform for the Vaccine Impact Modelling
+Consortium.
+
+Please take a minute to read our privacy policy before continuing to set up your account.
+Privacy terms:
+
+ - Only you will log in using your email address and password. You won't share your password with others. (If someone else in your group needs to be able to log in just let us know!)
+ - Any data that you download from Montagu which is not publicly available elsewhere will be subject to the Consortium publication policy. The use of this platform should serve the purposes of data sharing and analysis generation within the context of this project.
+ - Montagu can store your name and email address. We (Imperial College London) will only use your information to allow you to access this software for the duration of the Consortium (2017-2022) and/or as long as you are a member. We will never share your information outside the Consortium without your consent.
+ - Montagu can log how and when you use Montagu, including your IP address. We will never share this information outside of the core delivery team, and it will only be used for security audits and to plan how to improve Montagu. (For example, if there is a feature that nobody is using, that might tell us something is wrong with it!)
+ - If you want us to remove your information, you will not be able to access this software as it is only available to registered users.
+ - When you log in, Montagu sets a cookie that we can use to authenticate you across components of the Montagu platform
+
+If you go to the following address, you can set a password for
+your account:
+
+https://montagu.vaccineimpact.org/admin/set-password/?token={{token}}
+
+Welcome to Montagu. If you need any help using Montagu, or if you
+encounter any bugs, you can contact us using the #montagu-help
+channel on Slack, or by emailing us at {{support_address}}.
+
+Best wishes,
+
+The Montagu Team

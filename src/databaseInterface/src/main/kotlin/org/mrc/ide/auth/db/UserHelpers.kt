@@ -1,10 +1,13 @@
-import org.mrc.ide.auth.db.JooqContext
-import org.mrc.ide.auth.db.Tables
+package org.mrc.ide.auth.db
+
 import org.mrc.ide.auth.db.Tables.APP_USER
 import org.mrc.ide.auth.models.permissions.ReifiedRole
 import org.mrc.ide.auth.security.SodiumPasswordEncoder
 
-fun hashedPassword(plainPassword: String) = SodiumPasswordEncoder().encode(plainPassword)
+fun JooqContext.userExists(username: String): Boolean
+{
+    return this.dsl.fetchOne(APP_USER, APP_USER.USERNAME.eq(username)) != null
+}
 
 fun JooqContext.addUserForTesting(
         username: String,
@@ -17,7 +20,7 @@ fun JooqContext.addUserForTesting(
         this.username = username
         this.name = name
         this.email = email
-        this.passwordHash = hashedPassword(password)
+        this.passwordHash = SodiumPasswordEncoder().encode(password)
     }.store()
 
     this.dsl.newRecord(Tables.USER_GROUP).apply {
